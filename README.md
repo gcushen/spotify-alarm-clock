@@ -30,8 +30,11 @@ That's it! Rise and Shine in style with Spotify-Rise and remember to test your a
 Note: tested on Ubuntu 14.04.
 
 ### Options
+
 **-u URI** : play a specific Spotify URI (playlist, album, etc.) - click 'Copy Spotify URI' within Spotify and paste as the URI parameter.
+
 **-s**	: shuffle mode
+
 **-t**	: toggle shuffle (if not already toggled and you want shuffle mode)
 
 Copyright
