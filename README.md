@@ -19,9 +19,10 @@ Install an alarm scheduler and dependencies:
 Install the Spotify Rise alarm app:
 
     $ cd ~/Downloads/
+    $ wget -O spotify-rise https://raw.githubusercontent.com/neutreno/spotify-rise/master/spotify-rise
     $ sudo install spotify-rise /usr/local/bin/spotify-rise
 
-Schedule the alarm:
+Schedule the alarm and configure it to run the command `spotify-rise`:
 
     $ alarm-clock-applet
 
