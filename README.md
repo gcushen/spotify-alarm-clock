@@ -5,9 +5,9 @@ This program provides a lightweight alarm clock interface for the [Spotify Linux
 
 Features
 * specify any Spotify URI (playlist, album, etc.) to wake up to
-* shuffle mode
+* shuffle mode support
 * alarm fades in gradually
-* alarm timeout in case you are not in
+* alarm timeout in case you are not in or have a hangover :P
 
 Installation
 ------------
