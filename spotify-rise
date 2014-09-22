@@ -1,0 +1,111 @@
+#!/bin/bash
+#
+# Spotify Rise : Alarm Clock for Spotify Linux Client
+# https://github.com/neutreno/spotify-rise
+# Copyright 2014 George Cushen
+#
+# Spotify Rise is free software published under the terms of the 
+# GNU GPL 3 license: http://www.gnu.org/licenses/gpl-3.0.txt
+#
+# Usage:
+# 		spotify-rise [options]
+# Options:
+#		-u URI		play URI (playlist, album, etc.)
+#		-s			shuffle mode
+#		-t			toggle shuffle (if not already toggled and you want shuffle mode)
+
+###################################################################
+
+# Default Spotify URI to play 
+uri="spotify:user:magnusros:playlist:1yTTrznsEXjJmRcLrAVVDd" 
+
+# Alarm will automatically stop after alarm_timeout seconds if user has not already stopped alarm
+alarm_timeout=$((60*15)) 
+
+# Toggle shuffle mode when script starts? 
+# Useful if Spotify is usually in an unshuffled state, but you wish to vary the alarm song.
+shuffle_toggle=false
+
+# Is Spotify expected to be in shuffle mode? (Based on state it is left in and shuffle_toggle setting above)
+shuffle_mode=false
+
+###################################################################
+
+function spotify_focus () {
+	# Attempt to bring Spotify to front via dbus
+	qdbus org.mpris.MediaPlayer2.spotify / org.freedesktop.MediaPlayer2.Raise
+
+	# Also attempt via wmctrl
+	if wmctrl -l | grep "Spotify Premium - Linux Preview"; then
+		wmctrl -a "Spotify Premium - Linux Preview" >/dev/null
+	elif wmctrl -l | grep "Spotify - Linux Preview"; then
+		wmctrl -a "Spotify - Linux Preview" >/dev/null
+	fi
+}
+
+###################################################################
+
+# Timestamp
+now=$(date +"%d-%m-%Y %T")
+echo "Running at $now..."
+
+# Check for required apps
+cmd_array=( spotify qdbus pacmd xte )
+for i in "${cmd_array[@]}"; do
+	command -v $i >/dev/null 2>&1 || { echo >&2 "I require $i but it's not installed.  Aborting."; exit 1; }
+done
+
+# Required commands are available, continue...
+echo "Wakey! Wakey! Good morning :D"
+
+# Process arguments
+while getopts 'stu:' flag; do
+	case "${flag}" in
+		s) shuffle_mode=true ;;
+		t) shuffle_toggle=true ;;
+		u) uri="${OPTARG}" ;;
+		*) echo "Unexpected option ${flag}"; exit 1 ;;
+	esac
+done
+
+[ ${shuffle_toggle} == true ] && shuffle_mode=true;
+
+# Wait for Spotify to launch
+spotify 1>/dev/null 2>&1 &
+for (( i=0; i<200; i++ )); do
+	if [ `pgrep -x spotify 1>/dev/null 2>&1 && echo 1` == 1 ]; then 
+		metadata=`qdbus org.mpris.MediaPlayer2.spotify / org.freedesktop.MediaPlayer2.GetMetadata` # ignores any stderr msgs about service not existing yet
+	[[ $metadata ]] && break
+	fi
+	sleep 0.25
+done
+
+# Fade in alarm song
+stream_id=$(pacmd list-sink-inputs | sed -e '/index:/b' -e '/application.name/b' -e d | sed -n '/application.name = "Spotify"/{g;1!p;};h' | sed 's/index: //;s/^[ \t]*//')
+volume=0
+{
+	for ((volume = 0; volume <= 65536; volume += 3250)); do
+		#/usr/bin/aumix -v${volume} -w100 >/dev/null
+		pacmd set-sink-input-volume "$stream_id" "$volume" >/dev/null
+		sleep 2
+	done
+} &
+
+# Play!
+if [ ${shuffle_mode} == true ]; then
+	spotify_focus
+	sleep 0.5
+	xte 'keydown Control_L' 'key S' 'keyup Control_L'
+	if [ ${shuffle_toggle} == false ]; then
+		sleep 0.25
+		xte 'keydown Control_L' 'key S' 'keyup Control_L'
+		sleep 0.25
+	fi
+fi
+qdbus org.mpris.MediaPlayer2.spotify / org.freedesktop.MediaPlayer2.OpenUri $uri
+sleep 0.5
+[ ${shuffle_mode} == true ] && qdbus org.mpris.MediaPlayer2.spotify / org.freedesktop.MediaPlayer2.Next
+
+# Alarm timeout
+sleep $alarm_timeout
+qdbus org.mpris.MediaPlayer2.spotify / org.freedesktop.MediaPlayer2.Pause
