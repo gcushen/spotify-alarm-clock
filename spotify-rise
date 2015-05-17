@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Spotify Rise : Alarm Clock for Spotify Linux Client
-# https://github.com/neutreno/spotify-rise
+# https://github.com/gcushen/spotify-rise
 # Copyright 2014 George Cushen
 #
 # Spotify Rise is free software published under the terms of the 
@@ -10,9 +10,9 @@
 # Usage:
 # 		spotify-rise [options]
 # Options:
-#		-u URI		play URI (playlist, album, etc.)
-#		-s			shuffle mode
-#		-t			toggle shuffle (if not already toggled and you want shuffle mode)
+#		-u URI       play URI (playlist, album, etc.)
+#		-s           shuffle mode
+#		-t           toggle shuffle (if not already toggled and you want shuffle mode)
 
 ###################################################################
 
