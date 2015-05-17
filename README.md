@@ -19,16 +19,16 @@ Install an alarm scheduler and dependencies:
 Install the Spotify Rise alarm app:
 
     $ cd ~/Downloads/
-    $ wget -O spotify-rise https://raw.githubusercontent.com/neutreno/spotify-rise/master/spotify-rise
+    $ wget -O spotify-rise https://raw.githubusercontent.com/gcushen/spotify-rise/master/spotify-rise
     $ sudo install spotify-rise /usr/local/bin/spotify-rise
 
 Schedule the alarm and configure it to run the command `spotify-rise`:
 
     $ alarm-clock-applet
 
-That's it! Rise and Shine in style with Spotify-Rise and remember to test your alarm has been setup correctly before relying on it to wake you up!
+That's it! Rise and shine in style with Spotify-Rise and remember to test your alarm has been setup correctly before relying on it to wake you up!
 
-Note: tested on Ubuntu 14.04.
+Note: tested on Ubuntu 14.04 - 15.04.
 
 ### Options
 
@@ -46,4 +46,4 @@ Spotify-Rise was created by George Cushen and is copyright (c) 2014. It is licen
 Feedback
 --------
 
-Bugs and feedback can be reported on [Github](https://github.com/neutreno/spotify-rise/issues).
+Bugs and feedback can be reported on [Github](https://github.com/gcushen/spotify-rise/issues).
