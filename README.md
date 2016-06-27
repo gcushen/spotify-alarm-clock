@@ -4,10 +4,10 @@ A lightweight alarm clock for the [Spotify Linux Client](https://www.spotify.com
 
 Features
 
-* specify any Spotify URI (track, playlist, album, etc.) to wake up to
+* specify any Spotify track or album *(or playlist, with Spotify v0.9)* to wake up to
 * shuffle mode support
 * alarm fades in gradually
-* alarm timeout in case you are not in or have a hangover :laughing:
+* alarm timeout in case you are on holiday or have a hangover :laughing:
 
 Check out the [tutorial](https://georgecushen.com/spotify-alarm-clock-ubuntu-linux/) or see below for installation.
 
@@ -46,19 +46,43 @@ Install the Spotify Rise plugin:
     wget -O spotify-rise https://raw.githubusercontent.com/gcushen/spotify-rise/master/spotify-rise
     sudo install spotify-rise /usr/local/bin/spotify-rise
 
-Schedule the alarm and configure it to run the command `spotify-rise`:
+Open the alarm scheduler:
 
     alarm-clock-applet
 
+And configure it to run the command `spotify-rise <URI>` where `<URI>` is the Spotify URI to play. Copy a *track* URI within an album by right clicking on a track, choosing *Copy Spotify URI*, and pasting it as the `<URI>` placeholder.
+
 You may customize the `spotify-rise` command with the following options:
 
-Option     | Function
-:----------| :-----
-`-t`       | Toggle shuffle mode (if not already toggled in Spotify and you want shuffle mode)
-`-s`       | Expect that shuffle mode is active
-`-u <URI>` | Play a specific Spotify URI (track, playlist, album, etc.) - right click in Spotify and choose 'Copy Spotify URI' and paste it as the URI parameter.
+Option        | Function
+:-------------| :-------
+`-t`          | Toggle shuffle mode (if not already toggled in Spotify and you want shuffle mode)
+`-s`          | Expect that shuffle mode is already active
+`-h `         | Help 
+`-c <cutoff>` | Override the default 15 minute alarm timeout. Units are minutes. A zero value removes the timeout.
 
-That's it! Rise and shine in style with Spotify Rise and remember to test your alarm has been setup correctly before relying on it to wake you up!
+Continue reading on to the section below for example usage.
+
+To stop the alarm, you can either pause the current song in the Spotify Linux Client or over WiFi with the Spotify Mobile App, or just let the alarm automatically timeout after 15 minutes.
+
+That's it, rise and shine in style with Spotify Rise! Remember to test your alarm and speakers have been setup correctly before relying on them to wake you up!
+
+**Note:** Spotify **v1** no longer supports playing playlists/albums via Dbus, but we can partially workaround this issue by providing the URI of a (random) track within a desired album. For playlist support, currently you will need to downgrade to Spotify **v0.9**.
+
+
+## Examples
+
+Play an album/track, starting with specified track URI:
+
+    spotify-rise spotify:track:0I2kwvXCLolYQ4nZQcF6EQ
+
+Play an album in shuffle mode, assuming you keep Spotify in shuffle mode:
+
+    spotify-rise -s spotify:track:0I2kwvXCLolYQ4nZQcF6EQ
+
+Play an album in shuffle mode, assuming you do not keep Spotify in shuffle mode:
+
+    spotify-rise -ts spotify:track:0I2kwvXCLolYQ4nZQcF6EQ
 
 
 ## Contributing
